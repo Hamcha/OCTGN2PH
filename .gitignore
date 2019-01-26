@@ -1,2 +1,3 @@
 # Don't commit compiled files
 cards.json
+*.exe
