@@ -1,0 +1,62 @@
+<html>
+<head>
+	<title>Check ponyhead deck legality</title>
+	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+	<style>
+		.container {
+			max-width: 660px;
+			margin-top: 10vh;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Format legality checker</h1>
+		<div class="input-group">
+			<input class="form-input" type="text" id="ponyheadlink" placeholder="Ponyhead deck URL (not short)">
+			<button class="btn btn-primary input-group-btn" id="ponyheadbtn">Check</button>
+		</div>
+		<div id="legal-table-cont">
+		</div>
+	</div>
+	<script src="fmtcheck.js"></script>
+	<script>
+		function makeResults(results) {
+			let rows = [];
+			
+			// Make rows for each format
+			for (const format in results) {
+				const legal = results[format].legal ? "check" : "cross";
+				const why = results[format].illegalcards.map(c => `<a href="http://ponyhead.com/cards/${c}">${c}</a>`).join(" ");
+				rows.push(`<tr>
+					<td>${format}</td>
+					<td><i class="icon icon-${legal}"></i></td>
+					<td>${why}</td>
+				</tr>`);
+			}
+ 			return `<table class="table">
+				<thead>
+					<tr>
+						<th>Format</th>
+						<th>Is legal?</th>
+						<th>Why not</th>
+					</tr>
+				</thead>
+				<tbody>
+					${rows}
+				</tbody>
+			</table>`;
+		}
+
+		document.getElementById("ponyheadbtn").addEventListener("click", () => {
+			const url = document.getElementById("ponyheadlink").value.trim();
+			if (url === "") {
+				alert("PUT A LINK U DUMMY");
+			}
+			const results = check(url);
+			document.getElementById("legal-table-cont").innerHTML = makeResults(results);
+		});
+	</script>
+</body>
+</html>
